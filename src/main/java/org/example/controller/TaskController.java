@@ -3,6 +3,7 @@ package org.example.controller;
 import org.example.entity.Task;
 import org.example.entity.TaskStatus;
 import org.example.service.TaskService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,23 +21,16 @@ public class TaskController {
         return taskService.getAllTasks();
     }
 
-    @GetMapping("/{id}")
-    public Task getTaskById(@PathVariable Long id) {
-        return taskService.getTaskById(id);
-    }
-
     @PostMapping
-    public Task createTask(@RequestBody Task task) {
-        return taskService.createTask(task);
+    public Task createTask(
+            @Valid @RequestBody Task task,
+            @RequestParam Long projectId,
+            @RequestParam(required = false) Long assigneeId) {
+        return taskService.createTask(task, projectId, assigneeId);
     }
 
     @PatchMapping("/{id}/status")
     public Task updateTaskStatus(@PathVariable Long id, @RequestParam TaskStatus status) {
         return taskService.updateTaskStatus(id, status);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteTask(@PathVariable Long id) {
-        taskService.deleteTask(id);
     }
 }
